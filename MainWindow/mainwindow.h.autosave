@@ -8,6 +8,8 @@
 #include <QToolBar>
 #include <QWidget>
 #include <QLabel>
+#include <QListWidget>
+#include <QPushButton>
 
 
 class MainWindow : public QMainWindow

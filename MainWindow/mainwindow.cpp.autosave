@@ -53,6 +53,9 @@ void MainWindow::createBody()
     QListWidget *bodyMenu = new QListWidget;
     bodyMenu->insertItem(0, "item1");
     bodyMenu->insertItem(0, "item2");
+    
+    
+    
 
 
 }
