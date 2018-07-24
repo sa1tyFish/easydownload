@@ -24,8 +24,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp
+    MainWindow/mainwindow.cpp \
+    main.cpp
 
 HEADERS += \
-        mainwindow.h
+    MainWindow/mainwindow.h
+
+SUBDIRS += \
+    easydownload.pro
+
+DISTFILES += \
+    resources/new.ico
+
+RESOURCES += \
+    resources/actions.qrc
