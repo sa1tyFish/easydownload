@@ -8,7 +8,13 @@
 #include <QToolBar>
 #include <QWidget>
 #include <QLabel>
+#include <QListWidget>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QTabWidget>
 
+#include "downloadWindow/downloadwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -17,9 +23,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
-//define memnu bars
-    
+
 //define functions
 public:
     /*
@@ -34,13 +38,6 @@ public:
     void createActions();
     void createMenuBars();
     void createToolsBars();
-
-
-//define actions
-public:
-    //actions
-    QAction *createAction;
-    QAction *quiteasydownloadAction;
 
 
 private:
@@ -72,6 +69,12 @@ private:
     QToolBar *continueToolBar;
     QToolBar *editToolBar;
 
+    //主体部分
+
+    QTabWidget *mainTabWidget;
+    QWidget *downloadWdiget;
+    QWidget *searchWdiget;
+    QWidget *playWdiget;
 //define slots    
 private slots:
     void createconnections();

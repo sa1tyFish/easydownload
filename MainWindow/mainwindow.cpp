@@ -1,21 +1,20 @@
 #include "mainwindow.h"
 
 /*×××××××××××××××××××××××××××××××××××××××××××××××××××××
- 定义全局变量 
+ 定义全局变量
 *******************************************************/
 const QString appName = "EasyDownload";
 const QString WelcomeInfo = QObject::trUtf8("欢迎使用EasyDownload");
 const QString AutoUploadPath = "...........";
 
 /*
- *构造函数 
+ *构造函数
  */
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     this->createUi();
-
 
 
 }
@@ -30,30 +29,39 @@ void MainWindow::createUi()
     this->resize(600, 800);
 
     this->setWindowTitle(appName);
+    //创建动作
     this->createActions();
+    //创建菜单栏
     this->createMenuBars();
+    //创建工具栏
     this->createToolsBars();
-
-
-
-
-
     
+    //创建主体
+    this->createBody();
 }
 
 void MainWindow::createBody()
 {
-    QWidget *mainwdiget = new QWidget(this);
-    QStackedWidget *stackWidget = new QStackedWidget(this);
-    QLabel *downloadLable = new QLabel;
-    transform->setText(tr("download"));
-    QLabel *searchLable = new QLabel;
-    searchLable->setText(tr("search"));
+    /*
+     * 创建主体 一个tabwidget
+     */
+    this->mainTabWidget = new QTabWidget(this);
 
-    QListWidget *bodyMenu = new QListWidget;
-    bodyMenu->insertItem(0, "item1");
-    bodyMenu->insertItem(0, "item2");
+    //downloadwdiget 待替换
+    this->downloadWdiget = new QWidget();
 
+    //searchwidget 待替换
+    this->searchWdiget = new QWidget();
+
+    //playwidget 待替换
+    this->playWdiget = new QWidget();
+
+    this->mainTabWidget->addTab(this->downloadWdiget, QObject::trUtf8("下载"));
+    this->mainTabWidget->addTab(this->searchWdiget, QObject::trUtf8("检索"));
+    this->mainTabWidget->addTab(this->playWdiget, QObject::trUtf8("播放"));
+
+
+    setCentralWidget(this->mainTabWidget);
 
 }
 
