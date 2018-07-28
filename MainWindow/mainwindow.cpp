@@ -26,7 +26,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::createUi()
 {
-    this->resize(600, 800);
+    this->resize(400, 400);
 
     this->setWindowTitle(appName);
     //创建动作
@@ -48,7 +48,7 @@ void MainWindow::createBody()
     this->mainTabWidget = new QTabWidget(this);
 
     //downloadwdiget 待替换
-    this->downloadWdiget = new QWidget();
+    this->downloadWdiget = new DownloadWidget(this);
 
     //searchwidget 待替换
     this->searchWdiget = new QWidget();
