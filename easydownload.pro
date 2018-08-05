@@ -26,21 +26,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     MainWindow/mainwindow.cpp \
     main.cpp \
-    downloadWindow/downloadwidget.cpp \
-    downloadWindow/statuspannel.cpp \
-    downloadWindow/categorypannel.cpp \
-    downloadWindow/trackerpannel.cpp \
-    downloadWindow/downloaddetailswidget.cpp \
-    downloadWindow/trackerdetailswidget.cpp
+    downloadWindow/dwgroup.cpp \
+    downloadWindow/dwheader.cpp \
+    downloadWindow/dwiconlabel.cpp \
+    downloadWindow/dwpannel.cpp \
+    downloadWindow/dwrect.cpp \
+    downloadWindow/dwscheme.cpp
 
 HEADERS += \
     MainWindow/mainwindow.h \
-    downloadWindow/downloadwidget.h \
-    downloadWindow/statuspannel.h \
-    downloadWindow/categorypannel.h \
-    downloadWindow/trackerpannel.h \
-    downloadWindow/downloaddetailswidget.h \
-    downloadWindow/trackerdetailswidget.h
+    downloadWindow/dwgroup.h \
+    downloadWindow/dwheader.h \
+    downloadWindow/dwiconlabel.h \
+    downloadWindow/dwpannel.h \
+    downloadWindow/dwrect.h \
+    downloadWindow/dwscheme.h
 
 SUBDIRS += \
     easydownload.pro

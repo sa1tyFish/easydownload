@@ -55,7 +55,7 @@ void MainWindow::createBody()
 
     //playwidget 待替换
     this->playWdiget = new QWidget();
-
+    this->playWdiget->setStyleSheet("font-weight:3600;\n color:red;");
     this->mainTabWidget->addTab(this->downloadWdiget, QObject::trUtf8("下载"));
     this->mainTabWidget->addTab(this->searchWdiget, QObject::trUtf8("检索"));
     this->mainTabWidget->addTab(this->playWdiget, QObject::trUtf8("播放"));
