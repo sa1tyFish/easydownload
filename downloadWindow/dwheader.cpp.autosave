@@ -1,0 +1,107 @@
+#include "dwheader.h"
+
+#include <QVBoxLayout>
+
+
+
+DWHeader::DWHeader(const QIcon &icon, const QString &title, bool expandable, QWidget *parent)
+    :QFrame(parent),
+      m_bExpandable(expandable),
+      m_bOver(false),
+      m_bButtonOver(false),
+      m_bFold(true),
+      m_dOpacity(0.1),
+      m_plabelButton(nullptr)
+{
+    m_pdwiconTitle = new DWIconLabel(icon, title, this);
+    m_pdwiconTitle->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    
+    connect(m_pdwiconTitle, SIGNAL(activated()), this, SLOT(fold()));
+    
+    QHBoxLayout *hb1 = new QHBoxLayout();
+    hb1->setMargin(2);
+    setLayout(hb1);
+    
+    hb1->addWidget(m_pdwiconTitle);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    
+    this->fnSetScheme(DWScheme::s_fnDefaultScheme());
+    m_pdwiconTitle->fnSetSchemePointer(&m_pIconLabelScheme);
+    
+    if(m_bExpandable)
+    {
+        m_plabelButton = new QLabel(this);
+        hb1->addWidget(m_plabelButton);
+        m_plabelButton->installEventFilter(this);
+        m_plabelButton->setFixedWidth(m_pScheme->m_qsizeHeaderButtonSize.width());
+        this->changeIcons();
+    }
+    
+    
+}
+
+void DWHeader::fnSetScheme(DWScheme *scheme)
+{
+    
+}
+
+void DWHeader::fold()
+{
+    
+}
+
+void DWHeader::animate()
+{
+    
+}
+
+void DWHeader::paintEvent(QPaintEvent *event)
+{
+    
+}
+
+void DWHeader::enterEvent(QEvent *event)
+{
+    
+}
+
+void DWHeader::leaveEvent(QEvent *event)
+{
+    
+}
+
+void DWHeader::mouseReleaseEvent(QMouseEvent *event)
+{
+    
+}
+
+void DWHeader::keyPressEvent(QKeyEvent *event)
+{
+    
+}
+
+void DWHeader::keyReleaseEvent(QKeyEvent *event)
+{
+    
+}
+
+bool DWHeader::eventFilter(QObject *obj, QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::MouseButtonPress:
+        if(m_bExpandable)
+            fold();
+        return true;
+    case QEvent::Enter:
+        m_bButtonOver = true;
+        changeIcons();
+        return true;
+        
+    }
+    return QFrame::eventFilter(obj, event);
+}
+
+void DWHeader::changeIcons()
+{
+    
+}

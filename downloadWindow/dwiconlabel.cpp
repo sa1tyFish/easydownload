@@ -1,0 +1,263 @@
+#include "dwiconlabel.h"
+
+#include <QLabel>
+#include <QApplication>
+#include <QDebug>
+
+DWIconLabel::DWIconLabel(QWidget *parent)
+    : QWidget(parent),
+      m_pAction(nullptr),
+      m_ppScheme(nullptr),
+      m_bOver(false),
+      m_bPressed(false),
+      m_bChangedCursorOver(true),
+      m_bUnderlineOver(true)
+{
+    this->m_pAction = new QAction(this);
+    this->init();
+}
+
+DWIconLabel::DWIconLabel(QAction *action, QWidget *parent)
+    :QWidget(parent),
+
+      m_pAction(action),
+      m_ppScheme(nullptr),
+      m_bOver(false),
+      m_bPressed(false),
+      m_bChangedCursorOver(true),
+      m_bUnderlineOver(true)
+{
+    if(!this->m_pAction)
+        this->m_pAction = new QAction(this);
+    this->init();
+}
+
+DWIconLabel::DWIconLabel(const QString &title, QWidget *parent)
+    :QWidget(parent),
+
+      m_pAction(nullptr),
+      m_ppScheme(nullptr),
+      m_bOver(false),
+      m_bPressed(false),
+      m_bChangedCursorOver(true),
+      m_bUnderlineOver(true)
+{
+    this->m_pAction = new QAction(this);
+    this->init();
+}
+
+DWIconLabel::DWIconLabel(const QIcon &icon, QWidget *parent)
+    :QWidget(parent),
+
+      m_pAction(nullptr),
+      m_ppScheme(nullptr),
+      m_bOver(false),
+      m_bPressed(false),
+      m_bChangedCursorOver(true),
+      m_bUnderlineOver(true)
+{
+    this->m_pAction = new QAction(this);
+    this->init();
+}
+
+void DWIconLabel::init()
+{
+    setFocusPolicy(Qt::StrongFocus);
+
+    this->m_font.setWeight(0);
+    this->m_pen.setStyle(Qt::NoPen);
+
+    this->m_color = this->m_colorOver = this->m_colorDisabled = QColor();
+
+    this->addAction(this->m_pAction);
+
+    this->actionChanged();
+}
+
+
+void DWIconLabel::actionChanged()
+{
+
+    setEnabled(this->m_pAction->isEnabled());
+    setVisible(this->m_pAction->isVisible());
+
+    setToolTip(this->m_pAction->toolTip() == this->m_pAction->text()? "demo" : this->m_pAction->toolTip());
+
+
+    update();
+}
+
+
+void DWIconLabel::fnSetSchemePointer(IconLabelScheme **pointer)
+{
+    this->m_ppScheme = pointer;
+    update();
+}
+
+void DWIconLabel::fnSetColor(const QColor &color, const QColor &colorOver, const QColor &colorOff)
+{
+    this->m_color = color;
+    this->m_colorDisabled = colorOff;
+    this->m_colorOver = colorOver;
+    update();
+}
+
+void DWIconLabel::fnSetFont(const QFont &font)
+{
+    this->m_font = font;
+    update();
+}
+
+void DWIconLabel::fnSetFocusPen(const QPen &pen)
+{
+    this->m_pen = pen;
+    update();
+}
+
+QSize DWIconLabel::sizeHint() const
+{
+    return minimumSize();
+}
+
+QSize DWIconLabel::minimumSizeHint() const
+{
+    int s = (this->m_ppScheme && *this->m_ppScheme) ? (*this->m_ppScheme)->t_iconSize: 16;
+    QPixmap px = this->m_pAction->icon().pixmap(s, isEnabled()?QIcon::Normal:QIcon::Disabled);
+
+    int localheight = 4 + px.height();
+    int localweight = 8 + px.width();
+    if(this->m_pAction->text().isEmpty())
+    {
+        QFontMetrics fm(this->m_font);
+        localweight += fm.width(this->m_pAction->text());
+        localheight = qMax(localheight, 4+fm.height());
+    }
+    return QSize(localheight+2 , localweight +2);
+}
+
+
+void DWIconLabel::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    QRect textRect(rect().adjusted(0,0,-1,0));
+
+
+    int x = 2;
+
+    int s = (this->m_ppScheme && *this->m_ppScheme) ?(*this->m_ppScheme)->t_iconSize : 16;
+    QPixmap pixmap = this->m_pAction->icon().pixmap(s, isEnabled()? QIcon::Normal:QIcon::Disabled);
+
+    if(!pixmap.isNull())
+    {
+        painter.drawPixmap(x, 0, pixmap);
+        x += pixmap.width()+4;
+    }
+
+    if(!this->m_pAction->text().isEmpty())
+    {
+        QColor textColor = this->m_color, textOverColor = this->m_colorOver, textOffColor = this->m_colorDisabled;
+        QFont fnt = this->m_font;
+        QPen focusPen = this->m_pen;
+        bool underline = this->m_bUnderlineOver, cursorOver = this->m_bChangedCursorOver;
+        if(this->m_ppScheme && *this->m_ppScheme)
+        {
+            if(!textColor.isValid())textColor = (*this->m_ppScheme)->t_textColor;
+            if(!textOffColor.isValid())textOffColor = (*this->m_ppScheme)->t_textOffColor;
+            if(!textOverColor.isValid()) textOverColor = (*this->m_ppScheme)->t_textOverColor;
+            if(!fnt.weight()) fnt = (*this->m_ppScheme)->t_font;
+            if(!focusPen.style() == Qt::NoPen) focusPen = (*this->m_ppScheme)->t_focusPen;
+            underline = (*this->m_ppScheme)->t_underLineOver;
+            cursorOver = (*this->m_ppScheme)->t_cursorOver;
+        }
+
+        painter.setPen(isEnabled()? this->m_bOver?textOverColor:textColor :textOffColor);
+
+        if(isEnabled() && underline && this->m_bOver)
+            fnt.setUnderline(true);
+        painter.setFont(fnt);
+
+        textRect.setLeft(x);
+        QRect boundingRect;
+
+        QFontMetrics fm(fnt);
+        QString txt(fm.elidedText(this->m_pAction->text(), Qt::ElideRight, textRect.width()));
+
+        painter.drawText(textRect, Qt::AlignLeft|Qt::AlignVCenter, txt, &boundingRect);
+        if(hasFocus())
+        {
+            painter.setPen(focusPen);
+            painter.drawRect(boundingRect.adjusted(-2,-1,0,0));
+        }
+    }
+}
+
+void DWIconLabel::enterEvent(QEvent *event)
+{
+    this->m_bOver = true;
+
+    if(this->m_bChangedCursorOver)
+        QApplication::setOverrideCursor(Qt::PointingHandCursor);
+
+    this->m_pAction->hover();
+    update();
+}
+
+void DWIconLabel::leaveEvent(QEvent *event)
+{
+    this->m_bOver = false;
+    update();
+    if(this->m_bChangedCursorOver)
+        QApplication::restoreOverrideCursor();
+}
+
+void DWIconLabel::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        this->m_bPressed = true;
+        emit pressed();
+    }
+    else if(event->button() == Qt::RightButton)
+        emit contextMenu();
+    update();
+}
+
+void DWIconLabel::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        this->m_bPressed = false;
+        emit released();
+        if(rect().contains(event->pos()))
+        {
+            emit clicked();
+            emit activated();
+            this->m_pAction->activate(QAction::Trigger);
+        }
+    }
+    update();
+}
+
+void DWIconLabel::keyPressEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Space:
+    case Qt::Key_Return:
+        emit activated();
+        this->m_pAction->activate(QAction::Trigger);
+
+        break;
+    default:
+        break;
+    }
+    QWidget::keyPressEvent(event);
+}
+
+void DWIconLabel::actionEvent(QActionEvent *event)
+{
+    if(event->type() == QEvent::ActionChanged)
+        actionChanged();
+    QWidget::actionEvent(event);
+}
+
+
